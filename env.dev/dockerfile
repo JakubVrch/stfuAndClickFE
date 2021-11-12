@@ -1,0 +1,6 @@
+FROM node:14.17.5
+
+VOLUME /app
+WORKDIR /app
+
+CMD /bin/bash
