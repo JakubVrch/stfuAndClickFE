@@ -1,6 +1,6 @@
 FROM node:14.17.5
 
-VOLUME /app
-WORKDIR /app
+VOLUME /project
+WORKDIR /project
 
 CMD /bin/bash
