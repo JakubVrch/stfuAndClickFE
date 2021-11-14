@@ -1,20 +1,19 @@
-import axios, { AxiosInstance, AxiosPromise } from "axios";
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import { TeamResponse, ClickRequest, ClickResponse } from "./types"
 
-const headers = {
-    Accept: "application/json",
-    "Content-Type": "application/json; charset=utf-8",
-  };
-
+const config:AxiosRequestConfig<null> = {
+    baseURL: "https://klikuj.herokuapp.com/api/v1/",
+    headers: {
+      "Accept": "application/json",
+      "Content-Type": "application/json; charset=utf-8",
+    }
+  }
 class ApiService {
     private static instance: ApiService;
     private axios: AxiosInstance;
 
     private constructor() {
-        const http = axios.create({
-            baseURL: "https://klikuj.herokuapp.com/api/v1/",
-            headers
-          });
+        const http = axios.create(config);
       
         this.axios = http;
     }
@@ -27,8 +26,8 @@ class ApiService {
         return ApiService.instance;
     }
 
-    public getTeams = ():AxiosPromise<TeamResponse[]> => (this.axios.get("/leaderboard"))
-    public postClick = (data: ClickRequest):AxiosPromise<ClickResponse> => (this.axios.post("/klik", data))
+    public getTeams = () => (this.axios.get<TeamResponse[],AxiosResponse<TeamResponse[],null>>("/leaderboard"))
+    public postClick = (data: ClickRequest) => (this.axios.post<ClickResponse,AxiosResponse<ClickResponse,ClickRequest>>("/klik", data))
 }
   
   export const apiService = ApiService.getInstance();
