@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from 'app/hooks'
 import { click } from 'features/click/clickSlice'
 
-export function ClickForm () {
+export default function ClickForm () {
     const [teamName, setTeamName] = useState<string>("");
     const dispatch = useAppDispatch()
     const navigate = useNavigate();

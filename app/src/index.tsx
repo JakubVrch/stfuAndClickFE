@@ -1,18 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
-import { store } from './app/store';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import {ClickForm} from "features/click/ClickForm";
+import { store } from './app/store';
+import RegisterPage from "features/registerPage/";
+import ClickPage from "features/clickPage/";
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<ClickForm />} />
-          <Route path="/:team" element={<App />} />
+          <Route path="/" element={<RegisterPage />} />
+          <Route path="/:team" element={<ClickPage />} />
         </Routes>
       </BrowserRouter>
     </Provider>
