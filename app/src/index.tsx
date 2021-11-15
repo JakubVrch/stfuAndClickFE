@@ -12,7 +12,7 @@ ReactDOM.render(
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<RegisterPage />} />
-          <Route path="/:team" element={<ClickPage />} />
+          <Route path="/:teamName" element={<ClickPage />} />
         </Routes>
       </BrowserRouter>
     </Provider>
