@@ -1,7 +1,9 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit'
+import {compose, sortBy, prop, filter, gte, propEq} from 'ramda'
 import { TeamResponse,  } from "services/API/types"
 import { apiService } from "services/API/api.service"
 import { fetchStatus } from "services/redux/fetchStatus"
+import { RootState } from "app/store"
 
 export const fetchTeams = createAsyncThunk(
   'teams/fetchTeamsStatus',
@@ -43,8 +45,71 @@ export const fetchTeamsSlice = createSlice({
   },
 })
 
+export const selectStatus = (state: RootState) => state.teams.status
 
-// Other code such as selectors can use the imported `RootState` type
-/*export const selectCount = (state: RootState) => state.counter.value
-*/
+export function selectTop10 (state: RootState) {
+  if (state.teams.teams) {
+    return compose(
+      sortBy(prop("order")),
+      filter<TeamResponse> (
+        compose (
+          gte(10),
+          prop('order')
+        )
+      ),
+    )(state.teams.teams)
+  } else {
+    return [];
+  }
+
+}
+
+
+/**
+ * Selects Teams that should display in leaderboard on Clicking page
+ *
+ * Functions tries to display desired team -+ 3 teams based on their order, when not possible it optimizes this value to display desired number of teams
+ */
+export const selectAroundTeam = (teamName: string) => function (state: RootState) {
+  const positionsBeforeAfter = 3
+  
+  if (state.teams.teams) {
+    const teamsSorted = sortBy(
+      prop("order"),
+      state.teams.teams
+    );
+
+    if (teamsSorted.length <= (positionsBeforeAfter * 2 + 1) ) {
+      return teamsSorted;
+
+    } else {
+      const currentTeamPosition = teamsSorted.findIndex(propEq("team", teamName));
+      
+      if (currentTeamPosition != -1) {
+        const minQueryOrder = currentTeamPosition - positionsBeforeAfter;
+
+        if (minQueryOrder <= 0) {
+          return teamsSorted.slice(0,(positionsBeforeAfter * 2 + 1))
+
+        } else {
+          const maxQueryOrder = currentTeamPosition + positionsBeforeAfter;
+
+          if (maxQueryOrder > teamsSorted.length) {
+            return teamsSorted.slice(teamsSorted.length - 2 * positionsBeforeAfter - 1);
+
+          } else {
+            return teamsSorted.slice(minQueryOrder,maxQueryOrder + 1);
+          }
+        }
+      } else {
+        return []
+      }
+    }
+  } else {
+    return []
+  }
+}
+
+
 export default fetchTeamsSlice.reducer
+
