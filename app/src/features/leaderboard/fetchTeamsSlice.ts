@@ -1,28 +1,29 @@
-import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit'
-import {compose, sortBy, prop, filter, gte, propEq} from 'ramda'
-import { TeamResponse,  } from "services/API/types"
-import { apiService } from "services/API/api.service"
-import { fetchStatus } from "services/redux/fetchStatus"
-import { RootState } from "app/store"
-
-export const fetchTeams = createAsyncThunk(
-  'teams/fetchTeamsStatus',
-  async () => {
-    //TODO Happy path only here
-    const response = await apiService.getTeams()
-    return response.data
-  }
-)
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import {compose, sortBy, prop, filter, gte, propEq} from "ramda";
+import { TeamResponse,  } from "services/API/types";
+import { apiService } from "services/API/apiService";
+import { fetchStatus } from "services/redux/fetchStatus";
+import { RootState } from "app/store";
 
 interface fetchTeamsState {
   status: fetchStatus,
   teams?: TeamResponse[]
-  error?: unknown //TODO I need to investigate possible error states of server (missing docs)
+  error?: unknown //TODO Could not investigate possible error states
 }
 
 const initialState: fetchTeamsState = {
-  status: fetchStatus.LOADING
+  status: fetchStatus.LOADING,
+  teams: []
 }
+
+export const fetchTeams = createAsyncThunk(
+  'teams/fetchTeamsStatus',
+  async () => {
+    //TODO Happy path only here, could not investigate error states
+    const response = await apiService.getTeams()
+    return response.data
+  }
+)
 
 export const fetchTeamsSlice = createSlice({
   name: 'teams',
@@ -64,7 +65,6 @@ export function selectTop10 (state: RootState) {
 
 }
 
-
 /**
  * Selects Teams that should display in leaderboard on Clicking page
  *
@@ -85,7 +85,7 @@ export const selectAroundTeam = (teamName: string) => function (state: RootState
     } else {
       const currentTeamPosition = teamsSorted.findIndex(propEq("team", teamName));
       
-      if (currentTeamPosition != -1) {
+      if (currentTeamPosition !== -1) {
         const minQueryOrder = currentTeamPosition - positionsBeforeAfter;
 
         if (minQueryOrder <= 0) {
@@ -110,6 +110,4 @@ export const selectAroundTeam = (teamName: string) => function (state: RootState
   }
 }
 
-
 export default fetchTeamsSlice.reducer
-

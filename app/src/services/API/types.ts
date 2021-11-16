@@ -9,8 +9,7 @@ export type ClickRequest = {
     "session": string;
 }
 
-
 export type ClickResponse = {
-    "your_clicks": number;
-    "team_clicks": number;
+    "your_clicks": number | null;
+    "team_clicks": number | null;
 }

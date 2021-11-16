@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/css": "^11.5.0",
     "@emotion/react": "^11.6.0",
     "@emotion/styled": "^11.6.0",
     "@reduxjs/toolkit": "^1.5.1",
@@ -27,7 +28,7 @@
     "uuid": "^8.3.2"
   },
   "scripts": {
-    "start": "DISABLE_ESLINT_PLUGIN=true react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

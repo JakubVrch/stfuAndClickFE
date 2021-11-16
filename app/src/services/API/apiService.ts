@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
-import { TeamResponse, ClickRequest, ClickResponse } from "./types"
+import { TeamResponse, ClickRequest, ClickResponse } from "./types";
 
 const config:AxiosRequestConfig<null> = {
     baseURL: "https://klikuj.herokuapp.com/api/v1/",
@@ -8,6 +8,7 @@ const config:AxiosRequestConfig<null> = {
       "Content-Type": "application/json; charset=utf-8",
     }
   }
+
 class ApiService {
     private static instance: ApiService;
     private axios: AxiosInstance;
@@ -22,7 +23,6 @@ class ApiService {
         if (!ApiService.instance) {
             ApiService.instance = new ApiService();
         }
-
         return ApiService.instance;
     }
 

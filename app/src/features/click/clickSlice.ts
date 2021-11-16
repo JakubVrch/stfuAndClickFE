@@ -1,33 +1,38 @@
-import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit'
-import { ClickRequest, ClickResponse } from "services/API/types"
-import { apiService } from "services/API/api.service"
-import { fetchStatus } from "services/redux/fetchStatus"
-import { v4 as uuidv4 } from 'uuid';
-import { RootState } from "app/store"
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { v4 as uuidv4 } from "uuid";
+import { ClickResponse } from "services/API/types";
+import { apiService } from "services/API/apiService";
+import { fetchStatus } from "services/redux/fetchStatus";
+import { RootState } from "app/store";
+import { fetchTeams } from "features/leaderboard/fetchTeamsSlice";
 
 interface ClickState {
   session: string
   status: fetchStatus,
   clickResponse?: ClickResponse
-  error?: unknown //TODO I need to investigate possible error states of server (missing docs)
+  error?: unknown //TODO Could not investigate possible error states
 }
 
 const initialState: ClickState = {
   session: uuidv4(),
-  status: fetchStatus.LOADING
+  status: fetchStatus.IDLE,
+  clickResponse: {
+    your_clicks: 0,
+    team_clicks: null
+  }
 }
 
 export const click = createAsyncThunk(
   'click/clickStatus',
-  async (team: string, { getState }) => {
-    //TODO Happy path only here
+  async (team: string, { getState, dispatch }) => {
+    //TODO Happy path only here, could not investigate error states
     const session = selectSession(getState() as RootState)
     const data = {
       team: team,
       session: session
     }
-    console.log("test",getState());
     const response = await apiService.postClick(data)
+    dispatch(fetchTeams());
     return response.data
   }
 )
@@ -54,5 +59,7 @@ export const ClickSlice = createSlice({
 })
 
 export const selectSession = (state: RootState) => state.click.session
+export const selectStatus = (state: RootState) => state.click.status
+export const selectClickInfo = (state: RootState) => state.click.clickResponse
 
 export default ClickSlice.reducer

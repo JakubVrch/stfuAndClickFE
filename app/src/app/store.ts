@@ -1,5 +1,5 @@
-import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import logger from 'redux-logger'
+import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
+import logger from "redux-logger"
 import teamsReducer from "features/leaderboard/fetchTeamsSlice"
 import clickReducer from "features/click/clickSlice"
 
